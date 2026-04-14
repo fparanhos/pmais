@@ -1,0 +1,19 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #f5f6f8; color: #1d1f23; }
+a { color: #2b6cb0; text-decoration: none; }
+a:hover { text-decoration: underline; }
+button { cursor: pointer; border: 0; padding: 8px 14px; border-radius: 6px; background: #2b6cb0; color: #fff; font-size: 14px; }
+button.secondary { background: #e2e8f0; color: #1d1f23; }
+input, select, textarea { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; font-size: 14px; width: 100%; }
+.nav { background: #1d3557; color: #fff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+.nav a { color: #fff; margin-right: 16px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+.card { background: #fff; border-radius: 8px; padding: 18px; box-shadow: 0 1px 3px rgba(0,0,0,.06); margin-bottom: 16px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 8px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+th { background: #edf2f7; font-weight: 600; }
+.kanban { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; overflow-x: auto; }
+.col { background: #edf2f7; border-radius: 8px; padding: 10px; min-height: 400px; }
+.col h3 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; color: #475569; }
+.cardlet { background: #fff; padding: 10px; border-radius: 6px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.08); font-size: 13px; cursor: grab; }
+.status-pill { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; background: #e0e7ff; color: #3730a3; }
