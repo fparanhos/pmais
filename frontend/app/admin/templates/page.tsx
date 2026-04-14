@@ -1,7 +1,7 @@
 "use client";
 import useSWR from "swr";
 import { api, fetcher } from "@/lib/api";
-import Nav from "@/components/Nav";
+import Shell from "@/components/Shell";
 import { useState } from "react";
 
 export default function Templates() {
@@ -16,34 +16,35 @@ export default function Templates() {
   }
 
   return (
-    <>
-      <Nav />
-      <div className="container">
-        <div className="card"><h2>Templates de e-mail</h2></div>
+    <Shell title="Templates de e-mail" breadcrumb="Administração">
+      <div className="card">
+        <table className="simple">
+          <thead><tr><th>Chave</th><th>Assunto</th><th style={{ width: 100 }}></th></tr></thead>
+          <tbody>
+            {data?.map(t => (
+              <tr key={t.id}>
+                <td><code style={{ background: "#F3F4F6", padding: "2px 6px", borderRadius: 4 }}>{t.key}</code></td>
+                <td>{t.subject}</td>
+                <td><button className="secondary" onClick={() => setEditing(t)}>Editar</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {editing && (
         <div className="card">
-          <table>
-            <thead><tr><th>Chave</th><th>Assunto</th><th></th></tr></thead>
-            <tbody>
-              {data?.map(t => (
-                <tr key={t.id}>
-                  <td><code>{t.key}</code></td>
-                  <td>{t.subject}</td>
-                  <td><button className="secondary" onClick={() => setEditing(t)}>Editar</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {editing && (
-          <div className="card">
-            <h3>Editar: {editing.key}</h3>
-            <p><input value={editing.subject} onChange={e => setEditing({ ...editing, subject: e.target.value })} /></p>
-            <p><textarea rows={10} value={editing.body_html} onChange={e => setEditing({ ...editing, body_html: e.target.value })} /></p>
-            <button onClick={save}>Salvar</button>{" "}
+          <h3>Editar: {editing.key}</h3>
+          <label>Assunto<input value={editing.subject} onChange={e => setEditing({ ...editing, subject: e.target.value })} /></label>
+          <label style={{ display: "block", marginTop: 12 }}>Corpo HTML<textarea rows={12} value={editing.body_html} onChange={e => setEditing({ ...editing, body_html: e.target.value })} /></label>
+          <p style={{ fontSize: 12, color: "var(--muted)", marginTop: 8 }}>
+            Variáveis disponíveis: <code>{"{{evento}}"}</code> <code>{"{{servico}}"}</code> <code>{"{{fornecedor}}"}</code> <code>{"{{valor}}"}</code> <code>{"{{data}}"}</code>
+          </p>
+          <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+            <button onClick={save}>Salvar</button>
             <button className="secondary" onClick={() => setEditing(null)}>Cancelar</button>
           </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </Shell>
   );
 }
