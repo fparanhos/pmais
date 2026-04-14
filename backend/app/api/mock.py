@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import (
-    EmailLog, Event, FinanceStatus, ProducerStatus, Revenue, Role,
-    ServiceCategory, ServiceItem, User,
+    ChecklistItem, EmailLog, Event, FinanceStatus, ProducerStatus, Revenue, Role,
+    ServiceCategory, ServiceItem, Task, User,
 )
 from app.security import require_roles
 from app.seed_template import seed_event_template
@@ -167,6 +167,48 @@ def populate(db: Session = Depends(get_db)):
             event_id=ev.id,
             status="sent",
         ))
+
+    # Enriquece alguns itens com descrição + checklist (inspirado no Trello)
+    enrichments = {
+        "Locação Auditório Principal": (
+            "Montagem: 11-12/08 das 13:00 às 22:00\nEvento: 13/08 das 07:00 às 22:00\nCapacidade: 500 lugares",
+            ["Confirmar planta do espaço", "Reserva de estacionamento", "Checklist de acessibilidade", "Teste de som no dia 12"]
+        ),
+        "Equipamentos Sala Principal": (
+            "Painel de LED principal + sonorização\n4 Microfones Headset\n4 Microfones Sem Fio\n6 Rádios Comunicadores",
+            ["Cotar painel 6x3m", "Garantir 2 pontos de comunicação", "2 TVs de retorno no palco", "2 TVs timer"]
+        ),
+        "Kit Participante": (
+            "Bolsa + bloco + caneta + crachá + fita de crachá\nQtd: 450 unidades\nEntrega no dia 11/08 no centro de convenções",
+            ["Aprovar arte da bolsa com cliente", "Confirmar cor da fita (azul)", "Enviar logo em alta resolução", "Montar 50 kits extras"]
+        ),
+        "Hospedagem Palestrantes": (
+            "8 palestrantes confirmados (lista no drive)\nCheck-in 12/08 após 14h, check-out 14/08 até 12h\nPreferência quartos superiores",
+            ["Enviar nome completo + CPF dos 8", "Solicitar early check-in para palestrantes internacionais", "Confirmar café da manhã incluso"]
+        ),
+        "Coffee Break": (
+            "3 dias de evento (13, 14 e 15/08)\n2 coffees por dia × 450 pax = 900 porções/dia\nCardápio salgado + doce + frutas + bebidas",
+            ["Aprovar cardápio com cliente", "Confirmar opções vegetarianas", "Solicitar louça não descartável", "Reserva de 20% extra"]
+        ),
+    }
+    items_by_name = {i.name: i for i in db.query(ServiceItem).join(ServiceCategory).filter(ServiceCategory.event_id == ev.id).all()}
+    for name, (desc, checks) in enrichments.items():
+        it = items_by_name.get(name)
+        if not it:
+            continue
+        it.description = desc
+        for i, txt in enumerate(checks):
+            db.add(ChecklistItem(service_item_id=it.id, text=txt, done=(i < len(checks) // 2), sort_order=i))
+
+    # Atividades operacionais (coluna "Atividades à Fazer" do Trello)
+    for i, (title, desc, status) in enumerate([
+        ("Atração musical de abertura", "Banda regional de carnaval. Sugestões: Almir Rouche, Marrom Brasileiro, André Rio, Silvana Salazar.", "todo"),
+        ("Orçamento da estrutura", "Pórtico de entrada, espaço instagramável, fechamento do backstage.", "doing"),
+        ("Contratação das promotoras", "04 promotoras + 01 coordenador de house. Montagem 12/08 14h-22h, evento 13/08 6:30-19:00.", "waiting_approval"),
+        ("Assinatura do contrato do auditório", "Centro de Convenções Recife — contrato já revisado pelo jurídico.", "done"),
+        ("Envio do convite oficial ao cliente", "SBCBM — enviar via e-mail com o briefing final.", "done"),
+    ]):
+        db.add(Task(event_id=ev.id, title=title, description=desc, status=status, sort_order=i))
 
     db.commit()
     return {"ok": True, "event_id": ev.id, "items": len(ITEMS), "revenues": len(REVENUES)}

@@ -108,9 +108,33 @@ class ServiceItem(Base):
     bv_received: Mapped[bool] = mapped_column(Boolean, default=False)
 
     kanban_order: Mapped[int] = mapped_column(Integer, default=0)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     category: Mapped[ServiceCategory] = relationship(back_populates="items")
+    checklist: Mapped[list["ChecklistItem"]] = relationship(back_populates="item", cascade="all, delete-orphan", order_by="ChecklistItem.sort_order")
+
+
+class ChecklistItem(Base):
+    __tablename__ = "checklist_items"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    service_item_id: Mapped[int] = mapped_column(ForeignKey("service_items.id", ondelete="CASCADE"))
+    text: Mapped[str] = mapped_column(String(500))
+    done: Mapped[bool] = mapped_column(Boolean, default=False)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0)
+
+    item: Mapped[ServiceItem] = relationship(back_populates="checklist")
+
+
+class Task(Base):
+    __tablename__ = "tasks"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    event_id: Mapped[int] = mapped_column(ForeignKey("events.id", ondelete="CASCADE"))
+    title: Mapped[str] = mapped_column(String(255))
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(50), default="todo")  # todo | doing | waiting_approval | done
+    due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class Revenue(Base):

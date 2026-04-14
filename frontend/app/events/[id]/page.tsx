@@ -62,6 +62,7 @@ export default function EventControle() {
       actions={
         <>
           <a href={`/api/events/${id}/report.xlsx`} target="_blank"><button className="secondary">📄 Relatório cliente</button></a>
+          <Link href={`/events/${id}/tasks`}><button className="secondary">✓ Atividades</button></Link>
           <Link href={`/events/${id}/kanban`}><button className="secondary">📋 Kanban</button></Link>
           <Link href={`/events/${id}/config`}><button className="secondary">⚙ Configurações</button></Link>
         </>

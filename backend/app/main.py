@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import auth, events, services, kanban, templates, revenues, reports, users, mock
+from app.api import auth, events, services, kanban, templates, revenues, reports, users, mock, tasks
 from app.config import settings
 from app.database import SessionLocal
 from app.models import Role, User
@@ -19,7 +19,8 @@ app.add_middleware(
 )
 
 for r in (auth.router, events.router, services.router, kanban.router,
-          templates.router, revenues.router, reports.router, users.router, mock.router):
+          templates.router, revenues.router, reports.router, users.router,
+          mock.router, tasks.router):
     app.include_router(r)
 
 
