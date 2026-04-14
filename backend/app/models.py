@@ -9,6 +9,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 
 
+def _enum(py_enum, name):
+    return Enum(py_enum, name=name, values_callable=lambda e: [m.value for m in e])
+
+
 class Role(str, PyEnum):
     ADMIN = "admin"
     PRODUTOR = "produtor"
@@ -37,7 +41,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     name: Mapped[str] = mapped_column(String(255))
     hashed_password: Mapped[str] = mapped_column(String(255))
-    role: Mapped[Role] = mapped_column(Enum(Role), default=Role.PRODUTOR)
+    role: Mapped[Role] = mapped_column(_enum(Role, "role"), default=Role.PRODUTOR)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
@@ -89,13 +93,13 @@ class ServiceItem(Base):
     contracted_days: Mapped[float | None] = mapped_column(Numeric(14, 2), nullable=True)
     contracted_unit: Mapped[float | None] = mapped_column(Numeric(14, 2), nullable=True)
 
-    producer_status: Mapped[ProducerStatus | None] = mapped_column(Enum(ProducerStatus), nullable=True)
+    producer_status: Mapped[ProducerStatus | None] = mapped_column(_enum(ProducerStatus, "producerstatus"), nullable=True)
     supplier_company: Mapped[str | None] = mapped_column(String(255), nullable=True)
     supplier_contact: Mapped[str | None] = mapped_column(String(255), nullable=True)
     supplier_phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
     supplier_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    finance_status: Mapped[FinanceStatus | None] = mapped_column(Enum(FinanceStatus), nullable=True)
+    finance_status: Mapped[FinanceStatus | None] = mapped_column(_enum(FinanceStatus, "financestatus"), nullable=True)
     payment_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     paid_value: Mapped[float | None] = mapped_column(Numeric(14, 2), nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
