@@ -2,7 +2,7 @@
 import useSWR from "swr";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { api, fetcher } from "@/lib/api";
+import { api, fetcher, getToken } from "@/lib/api";
 import Shell from "@/components/Shell";
 import { useState, useEffect } from "react";
 
@@ -61,7 +61,7 @@ export default function EventControle() {
       breadcrumb={<Link href="/events">Eventos</Link>}
       actions={
         <>
-          <a href={`/api/events/${id}/report.xlsx`} target="_blank"><button className="secondary">📄 Relatório cliente</button></a>
+          <a href={`/api/events/${id}/report.xlsx?token=${getToken() || ""}`} target="_blank" rel="noopener"><button className="secondary">📄 Relatório cliente</button></a>
           <Link href={`/events/${id}/tasks`}><button className="secondary">✓ Atividades</button></Link>
           <Link href={`/events/${id}/kanban`}><button className="secondary">📋 Kanban</button></Link>
           <Link href={`/events/${id}/config`}><button className="secondary">⚙ Configurações</button></Link>

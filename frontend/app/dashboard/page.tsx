@@ -39,7 +39,7 @@ export default function Dashboard() {
     <Shell
       title="Dashboard"
       breadcrumb="Visão geral"
-      actions={!events?.length && <button className="primary-purple" onClick={populateMock}>▸ Popular com dados de demonstração</button>}
+      actions={<button className="primary-purple" onClick={populateMock}>▸ Popular com dados de demonstração</button>}
     >
       {!events?.length ? (
         <div className="card">

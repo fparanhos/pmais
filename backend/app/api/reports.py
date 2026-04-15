@@ -2,13 +2,26 @@ from io import BytesIO
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
+from jose import JWTError, jwt
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from sqlalchemy.orm import Session, selectinload
 
+from app.config import settings
 from app.database import get_db
 from app.models import Event, Revenue, ServiceCategory, User
-from app.security import current_user
+
+
+def _user_from_query(token: str, db: Session) -> User:
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
+        email = payload.get("sub")
+    except JWTError:
+        raise HTTPException(401, "token inválido")
+    u = db.query(User).filter(User.email == email, User.is_active.is_(True)).first()
+    if not u:
+        raise HTTPException(401, "usuário inválido")
+    return u
 
 router = APIRouter(prefix="/api", tags=["reports"])
 
@@ -25,7 +38,8 @@ def _total(it, kind: str) -> float:
 
 
 @router.get("/events/{event_id}/report.xlsx")
-def report_xlsx(event_id: int, db: Session = Depends(get_db), _: User = Depends(current_user)):
+def report_xlsx(event_id: int, token: str, db: Session = Depends(get_db)):
+    _user_from_query(token, db)
     ev = db.get(Event, event_id)
     if not ev:
         raise HTTPException(404)
