@@ -21,14 +21,16 @@ export function UserMenu({
     .toUpperCase();
 
   return (
-    <div className="border-t border-border px-3 py-3">
+    <div className="border-t border-sidebar-border px-3 py-3">
       <div className="flex items-center gap-3 px-2 py-1.5 rounded-lg">
         <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold">
           {initials}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="text-sm font-medium truncate">{name || email}</div>
-          <div className="text-[11px] text-muted-foreground truncate">
+          <div className="text-sm font-medium truncate text-sidebar-foreground">
+            {name || email}
+          </div>
+          <div className="text-[11px] text-sidebar-muted truncate">
             {role}
           </div>
         </div>
@@ -36,7 +38,7 @@ export function UserMenu({
       <form action={logoutAction}>
         <button
           type="submit"
-          className="w-full mt-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          className="w-full mt-2 flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-sidebar-muted hover:bg-white/5 hover:text-sidebar-foreground transition-colors"
         >
           <LogOut className="h-3.5 w-3.5" />
           Sair

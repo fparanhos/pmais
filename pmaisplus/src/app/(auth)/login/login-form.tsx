@@ -5,7 +5,7 @@ import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { loginAction, type LoginState } from "./actions";
 
 function SubmitButton() {
@@ -24,11 +24,8 @@ export function LoginForm() {
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Entrar no Pmais+</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Card className="shadow-sm">
+      <CardContent className="pt-6">
         <form action={formAction} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">E-mail</Label>

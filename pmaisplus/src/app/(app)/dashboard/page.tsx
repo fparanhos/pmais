@@ -89,7 +89,7 @@ export default async function DashboardPage() {
             value={`${pctContratado}%`}
             delta={`${brl(summary.despesaContratada)} de ${brl(summary.despesaPlanejada)}`}
             icon={CheckCircle2}
-            tone="default"
+            tone="primary"
           />
           <KpiCard
             label="Despesas pagas"
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
 
         {/* Main chart + donut */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 chart-surface">
             <CardHeader>
               <CardTitle className="text-base">Despesas por categoria</CardTitle>
               <CardDescription>
@@ -121,7 +121,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="chart-surface">
             <CardHeader>
               <CardTitle className="text-base">Receita por tipo</CardTitle>
               <CardDescription>

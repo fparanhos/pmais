@@ -175,6 +175,64 @@ export async function getRevenueItems(eventId: string) {
   });
 }
 
+export async function getAllExpenseItems(eventId: string) {
+  return prisma.expenseItem.findMany({
+    where: { category: { eventId } },
+    orderBy: [{ category: { order: "asc" } }, { servico: "asc" }],
+    select: {
+      id: true,
+      servico: true,
+      category: { select: { name: true } },
+    },
+  });
+}
+
+export async function getSuppliers(eventId: string) {
+  return prisma.supplier.findMany({
+    where: { eventId },
+    orderBy: { empresa: "asc" },
+  });
+}
+
+export type TaskLabel = { name: string; color: string | null };
+
+export async function getTasksGrouped(eventId: string) {
+  const tasks = await prisma.task.findMany({
+    where: { eventId, closed: false },
+    orderBy: [{ listOrder: "asc" }, { position: "asc" }],
+    include: {
+      checklists: {
+        orderBy: { position: "asc" },
+        include: {
+          items: { orderBy: { position: "asc" } },
+        },
+      },
+    },
+  });
+
+  // Group by listName in order of first occurrence (listOrder is already sorted)
+  type Col = {
+    listOrder: number;
+    listName: string;
+    tasks: typeof tasks;
+  };
+  const columns = new Map<string, Col>();
+  for (const t of tasks) {
+    const key = `${t.listOrder}::${t.listName}`;
+    const col = columns.get(key);
+    if (col) {
+      col.tasks.push(t);
+    } else {
+      columns.set(key, {
+        listOrder: t.listOrder,
+        listName: t.listName,
+        tasks: [t],
+      });
+    }
+  }
+  return Array.from(columns.values()).sort((a, b) => a.listOrder - b.listOrder);
+}
+
 export async function getExpenseItemsByCategory(eventId: string) {
   const categories = await prisma.expenseCategory.findMany({
     where: { eventId },

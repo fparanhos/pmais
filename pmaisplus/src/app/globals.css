@@ -9,7 +9,7 @@
 /* Pmais+ palette — teal primário (#2FB5AD) + roxo acento (#4C0DB3)
    mapeada sobre os tokens do shadcn. */
 :root {
-  --background: #F7F8FA;
+  --background: #F5F7FB;
   --foreground: #1A1D29;
 
   --card: #FFFFFF;
@@ -21,6 +21,7 @@
   --primary-foreground: #FFFFFF;
   --primary-hover: #238F89;
   --primary-soft: #E6F7F5;
+  --primary-deep: #176B66;
 
   --secondary: #F3F4F6;
   --secondary-foreground: #1A1D29;
@@ -55,14 +56,35 @@
 
   --radius: 0.625rem;
 
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A1D29;
+  /* Dark sidebar — identidade Pmais forte */
+  --sidebar: #171A26;
+  --sidebar-foreground: #E6E8EE;
+  --sidebar-muted: #9AA3B7;
   --sidebar-primary: #2FB5AD;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #E6F7F5;
-  --sidebar-accent-foreground: #238F89;
-  --sidebar-border: #E5E7EB;
+  --sidebar-accent: rgba(47, 181, 173, 0.16);
+  --sidebar-accent-foreground: #5EEDE2;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
   --sidebar-ring: #2FB5AD;
+
+  /* Degradês de marca (usar como background no Tailwind) */
+  --brand-gradient-soft: linear-gradient(
+    135deg,
+    rgba(47, 181, 173, 0.12) 0%,
+    rgba(76, 13, 179, 0.08) 55%,
+    rgba(247, 248, 250, 0) 100%
+  );
+  --brand-gradient-strong: linear-gradient(
+    135deg,
+    #176B66 0%,
+    #2FB5AD 45%,
+    #4C0DB3 100%
+  );
+  --brand-gradient-sidebar: linear-gradient(
+    180deg,
+    #171A26 0%,
+    #101321 100%
+  );
 }
 
 @theme inline {
@@ -78,6 +100,8 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
   --color-primary-soft: var(--primary-soft);
+  --color-primary-deep: var(--primary-deep);
+  --color-sidebar-muted: var(--sidebar-muted);
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -184,5 +208,36 @@ body {
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer utilities {
+  .bg-brand-soft {
+    background-image: var(--brand-gradient-soft);
+  }
+  .bg-brand-strong {
+    background-image: var(--brand-gradient-strong);
+  }
+  .bg-sidebar-brand {
+    background-image: var(--brand-gradient-sidebar);
+  }
+  .text-brand-gradient {
+    background: linear-gradient(135deg, #2fb5ad 0%, #4c0db3 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .chart-surface {
+    background:
+      radial-gradient(
+        circle at 15% 0%,
+        rgba(47, 181, 173, 0.07) 0%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 100% 100%,
+        rgba(76, 13, 179, 0.06) 0%,
+        transparent 50%
+      );
   }
 }
