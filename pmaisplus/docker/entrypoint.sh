@@ -10,7 +10,9 @@ export DATABASE_URL
 
 echo "[pmaisplus] DATABASE_URL=${DATABASE_URL}"
 echo "[pmaisplus] applying migrations…"
-npx --yes prisma migrate deploy --schema=./prisma/schema.prisma
+# Invocar prisma pelo path direto — sem depender de node_modules/.bin (não
+# copiado no multi-stage build).
+node ./node_modules/prisma/build/index.js migrate deploy --schema=./prisma/schema.prisma
 
 if [ "${SEED_ON_BOOT:-false}" = "true" ]; then
   echo "[pmaisplus] seeding admin (SEED_ON_BOOT=true)…"
