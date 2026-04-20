@@ -32,7 +32,11 @@ export default async function AppLayout({
             +
           </span>
         </div>
-        <EventPicker events={events} activeId={active?.id ?? null} />
+        <EventPicker
+          events={events}
+          activeId={active?.id ?? null}
+          canDelete={session?.user?.role === "ADMIN"}
+        />
         <Sidebar isAdmin={session?.user?.role === "ADMIN"} />
         {session?.user && (
           <UserMenu

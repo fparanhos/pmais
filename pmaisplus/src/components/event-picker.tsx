@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { Calendar, Check, ChevronsUpDown } from "lucide-react";
-import { setActiveEvent } from "@/app/(app)/event-actions";
+import { Calendar, Check, ChevronsUpDown, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { deleteEvent, setActiveEvent } from "@/app/(app)/event-actions";
 
 export type EventOption = {
   id: string;
@@ -15,12 +16,15 @@ export type EventOption = {
 export function EventPicker({
   events,
   activeId,
+  canDelete = false,
 }: {
   events: EventOption[];
   activeId: string | null;
+  canDelete?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
   const active = events.find((e) => e.id === activeId) ?? events[0];
@@ -51,6 +55,23 @@ export function EventPicker({
     startTransition(async () => {
       await setActiveEvent(id);
       setOpen(false);
+    });
+  }
+
+  function handleDelete(e: EventOption) {
+    if (!confirm(
+      `Excluir "${e.name}"?\n\nIsso apaga todas as categorias, itens, fornecedores, receitas, tarefas e checklists desse evento. Não dá pra desfazer.`,
+    )) return;
+    setDeletingId(e.id);
+    startTransition(async () => {
+      const r = await deleteEvent(e.id);
+      setDeletingId(null);
+      if (r.ok) {
+        toast.success(`Evento "${e.name}" excluído.`);
+        if (events.length <= 1) setOpen(false);
+      } else {
+        toast.error(r.error);
+      }
     });
   }
 
@@ -92,16 +113,26 @@ export function EventPicker({
           <ul className="max-h-72 overflow-y-auto py-1">
             {events.map((e) => {
               const selected = e.id === active.id;
+              const isDeleting = deletingId === e.id;
               return (
-                <li key={e.id}>
+                <li
+                  key={e.id}
+                  className={
+                    "group relative flex items-stretch transition-colors " +
+                    (selected
+                      ? "bg-sidebar-accent/40"
+                      : "hover:bg-white/5")
+                  }
+                >
                   <button
                     type="button"
                     onClick={() => choose(e.id)}
+                    disabled={isDeleting}
                     className={
-                      "w-full flex items-start gap-2 px-3 py-2 text-left text-sm transition-colors " +
+                      "flex-1 flex items-start gap-2 px-3 py-2 text-left text-sm " +
                       (selected
-                        ? "bg-sidebar-accent/40 text-sidebar-accent-foreground"
-                        : "text-sidebar-foreground/85 hover:bg-white/5 hover:text-sidebar-foreground")
+                        ? "text-sidebar-accent-foreground"
+                        : "text-sidebar-foreground/85 group-hover:text-sidebar-foreground")
                     }
                   >
                     <Check
@@ -111,7 +142,9 @@ export function EventPicker({
                       }
                     />
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium truncate">{e.name}</div>
+                      <div className="font-medium truncate">
+                        {isDeleting ? "Excluindo…" : e.name}
+                      </div>
                       {e.cliente && (
                         <div className="text-[11px] text-sidebar-muted truncate">
                           {e.cliente}
@@ -119,6 +152,17 @@ export function EventPicker({
                       )}
                     </div>
                   </button>
+                  {canDelete && (
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(e)}
+                      disabled={isDeleting || pending}
+                      title={`Excluir "${e.name}"`}
+                      className="px-2 flex items-center opacity-0 group-hover:opacity-100 focus:opacity-100 text-sidebar-muted hover:text-destructive transition-opacity"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                 </li>
               );
             })}

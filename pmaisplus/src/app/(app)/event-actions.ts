@@ -29,3 +29,31 @@ export async function setActiveEvent(id: string): Promise<{ ok: boolean }> {
   revalidatePath("/", "layout");
   return { ok: true };
 }
+
+export async function deleteEvent(
+  id: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const s = await auth();
+  if (!s?.user) return { ok: false, error: "Não autenticado." };
+  if (s.user.role !== "ADMIN") {
+    return { ok: false, error: "Apenas administradores podem excluir eventos." };
+  }
+
+  const ev = await prisma.event.findUnique({
+    where: { id },
+    select: { id: true, name: true },
+  });
+  if (!ev) return { ok: false, error: "Evento não encontrado." };
+
+  // Cascade apaga categorias/itens/fornecedores/receitas/tarefas/checklists.
+  await prisma.event.delete({ where: { id } });
+
+  // Se o cookie apontava pro evento deletado, limpa.
+  const store = await cookies();
+  if (store.get(ACTIVE_EVENT_COOKIE)?.value === id) {
+    store.delete(ACTIVE_EVENT_COOKIE);
+  }
+
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
