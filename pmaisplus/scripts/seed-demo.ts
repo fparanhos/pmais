@@ -3,8 +3,9 @@ import { PrismaClient } from "../src/generated/prisma/client";
 
 // ─────────────────────────────────────────────────────────────
 // Seed demo — estrutura da planilha padrão Pmais + valores mock
-// realistas para um congresso médio (Radar 2026 · SBD).
-// Idempotente: sempre zera e recria o evento de demo.
+// realistas para um congresso médio (Radar 2025 · SBD).
+// Idempotente: sempre zera e recria o evento de demo (tasks/Trello são
+// preservadas — só categorias/itens/fornecedores/receitas são recriadas).
 // ─────────────────────────────────────────────────────────────
 
 type StatusProdutor =
@@ -49,13 +50,13 @@ type DemoCategory = {
 // ─────────────────────────────────────────────
 
 const EVENT = {
-  name: "Radar 2026",
+  name: "Radar 2025",
   cliente: "SBD — Sociedade Brasileira de Diabetes",
   produtorNome: "João Henrique",
   local: "Centro de Convenções Rebouças · São Paulo",
   publicoAlvo: "Endocrinologistas, nutricionistas e profissionais de saúde",
-  startDate: new Date("2026-09-16"),
-  endDate: new Date("2026-09-18"),
+  startDate: new Date("2025-09-17"),
+  endDate: new Date("2025-09-19"),
 };
 
 // ─────────────────────────────────────────────
@@ -93,7 +94,7 @@ const CATEGORIES: DemoCategory[] = [
         statusFinanceiro: "PAGO",
         supplier: "convencoes",
         valorPago: 2800,
-        dataPagamento: new Date("2026-03-18"),
+        dataPagamento: new Date("2025-03-18"),
       },
       {
         servico: "Reuniões Pré-Evento",
@@ -119,7 +120,7 @@ const CATEGORIES: DemoCategory[] = [
         statusFinanceiro: "PAGO",
         supplier: "villagio",
         valorPago: 12900,
-        dataPagamento: new Date("2026-04-05"),
+        dataPagamento: new Date("2025-04-05"),
       },
       {
         servico: "Hospedagem Palestrantes",
@@ -152,7 +153,7 @@ const CATEGORIES: DemoCategory[] = [
         statusFinanceiro: "PAGO",
         supplier: "voeja",
         valorPago: 14000,
-        dataPagamento: new Date("2026-03-30"),
+        dataPagamento: new Date("2025-03-30"),
       },
       {
         servico: "Passagem Aérea Palestrantes",
@@ -185,7 +186,7 @@ const CATEGORIES: DemoCategory[] = [
         statusFinanceiro: "AGUARDANDO_APROVACAO",
         supplier: "chefmesa",
       },
-      { servico: "Água Participantes", planejado: { qtd: 500, dias: 3, unit: 4 }, orcado: { qtd: 500, dias: 3, unit: 4 }, contratado: { qtd: 500, dias: 3, unit: 4 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "chefmesa", valorPago: 6000, dataPagamento: new Date("2026-04-10") },
+      { servico: "Água Participantes", planejado: { qtd: 500, dias: 3, unit: 4 }, orcado: { qtd: 500, dias: 3, unit: 4 }, contratado: { qtd: 500, dias: 3, unit: 4 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "chefmesa", valorPago: 6000, dataPagamento: new Date("2025-04-10") },
       { servico: "Garrafa de Café", planejado: { qtd: 20, dias: 3, unit: 120 }, orcado: { qtd: 20, dias: 3, unit: 120 }, statusProdutor: "AGUARDANDO_APROVACAO", supplier: "chefmesa" },
       { servico: "Serviço de Sala", planejado: { qtd: 6, dias: 3, unit: 180 }, statusProdutor: "EM_COTACAO" },
       { servico: "Coquetel/Happy Hour", planejado: { qtd: 1, dias: 1, unit: 25000 }, orcado: { qtd: 1, dias: 1, unit: 23500 }, statusProdutor: "NEGOCIACAO", supplier: "chefmesa" },
@@ -195,8 +196,8 @@ const CATEGORIES: DemoCategory[] = [
     name: "LOCAÇÃO DE ESPAÇOS",
     order: 50,
     items: [
-      { servico: "Locação Auditório Principal", planejado: { qtd: 1, dias: 3, unit: 15000 }, orcado: { qtd: 1, dias: 3, unit: 14500 }, contratado: { qtd: 1, dias: 3, unit: 14500 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "convencoes", valorPago: 43500, dataPagamento: new Date("2026-03-25") },
-      { servico: "Locação Salas Paralelas", planejado: { qtd: 4, dias: 3, unit: 4500 }, orcado: { qtd: 4, dias: 3, unit: 4200 }, contratado: { qtd: 4, dias: 3, unit: 4200 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "convencoes", valorPago: 50400, dataPagamento: new Date("2026-03-25") },
+      { servico: "Locação Auditório Principal", planejado: { qtd: 1, dias: 3, unit: 15000 }, orcado: { qtd: 1, dias: 3, unit: 14500 }, contratado: { qtd: 1, dias: 3, unit: 14500 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "convencoes", valorPago: 43500, dataPagamento: new Date("2025-03-25") },
+      { servico: "Locação Salas Paralelas", planejado: { qtd: 4, dias: 3, unit: 4500 }, orcado: { qtd: 4, dias: 3, unit: 4200 }, contratado: { qtd: 4, dias: 3, unit: 4200 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "convencoes", valorPago: 50400, dataPagamento: new Date("2025-03-25") },
       { servico: "Locação Área de Exposição", planejado: { qtd: 1, dias: 3, unit: 22000 }, orcado: { qtd: 1, dias: 3, unit: 21000 }, contratado: { qtd: 1, dias: 3, unit: 21000 }, statusProdutor: "APROVADO", statusFinanceiro: "ENVIADO_LANCADO", supplier: "convencoes" },
     ],
   },
@@ -205,7 +206,7 @@ const CATEGORIES: DemoCategory[] = [
     order: 60,
     items: [
       { servico: "Recepcionistas e Apoio", planejado: { qtd: 12, dias: 3, unit: 350 }, orcado: { qtd: 12, dias: 3, unit: 330 }, contratado: { qtd: 12, dias: 3, unit: 330 }, statusProdutor: "APROVADO", statusFinanceiro: "SOLICITADO", supplier: "sgrecep" },
-      { servico: "Mestre de Cerimônia", planejado: { qtd: 1, dias: 3, unit: 1800 }, orcado: { qtd: 1, dias: 3, unit: 1800 }, contratado: { qtd: 1, dias: 3, unit: 1800 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", valorPago: 5400, dataPagamento: new Date("2026-04-15") },
+      { servico: "Mestre de Cerimônia", planejado: { qtd: 1, dias: 3, unit: 1800 }, orcado: { qtd: 1, dias: 3, unit: 1800 }, contratado: { qtd: 1, dias: 3, unit: 1800 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", valorPago: 5400, dataPagamento: new Date("2025-04-15") },
       { servico: "Equipe de Segurança", planejado: { qtd: 6, dias: 3, unit: 280 }, orcado: { qtd: 6, dias: 3, unit: 280 }, statusProdutor: "AGUARDANDO_APROVACAO" },
       { servico: "Equipe Bombeiro", planejado: { qtd: 2, dias: 3, unit: 450 }, orcado: { qtd: 2, dias: 3, unit: 450 }, contratado: { qtd: 2, dias: 3, unit: 450 }, statusProdutor: "APROVADO", statusFinanceiro: "AGUARDANDO_APROVACAO" },
       { servico: "Equipe Limpeza", planejado: { qtd: 8, dias: 3, unit: 220 }, orcado: { qtd: 8, dias: 3, unit: 220 }, statusProdutor: "EM_COTACAO" },
@@ -215,7 +216,7 @@ const CATEGORIES: DemoCategory[] = [
     name: "T.I.",
     order: 70,
     items: [
-      { servico: "Site e Sistema de Inscrição", planejado: { qtd: 1, dias: 1, unit: 18000 }, orcado: { qtd: 1, dias: 1, unit: 16500 }, contratado: { qtd: 1, dias: 1, unit: 16500 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "nevent", valorPago: 16500, dataPagamento: new Date("2026-02-20") },
+      { servico: "Site e Sistema de Inscrição", planejado: { qtd: 1, dias: 1, unit: 18000 }, orcado: { qtd: 1, dias: 1, unit: 16500 }, contratado: { qtd: 1, dias: 1, unit: 16500 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "nevent", valorPago: 16500, dataPagamento: new Date("2025-02-20") },
       { servico: "APP do Evento", planejado: { qtd: 1, dias: 1, unit: 12000 }, orcado: { qtd: 1, dias: 1, unit: 12000 }, contratado: { qtd: 1, dias: 1, unit: 12000 }, statusProdutor: "APROVADO", statusFinanceiro: "ENVIADO_LANCADO", supplier: "nevent", obsParcelas: "50% na assinatura, 50% após go-live" },
       { servico: "Suporte Local T.I.", planejado: { qtd: 2, dias: 3, unit: 800 }, statusProdutor: "EM_COTACAO", supplier: "nevent" },
     ],
@@ -233,9 +234,9 @@ const CATEGORIES: DemoCategory[] = [
     name: "MATERIAL DO PARTICIPANTE",
     order: 90,
     items: [
-      { servico: "Kit Participante", planejado: { qtd: 600, dias: 1, unit: 45 }, orcado: { qtd: 600, dias: 1, unit: 42 }, contratado: { qtd: 600, dias: 1, unit: 42 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "miam", valorPago: 25200, dataPagamento: new Date("2026-04-12") },
-      { servico: "Crachá", planejado: { qtd: 600, dias: 1, unit: 4 }, orcado: { qtd: 600, dias: 1, unit: 4 }, contratado: { qtd: 600, dias: 1, unit: 4 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "miam", valorPago: 2400, dataPagamento: new Date("2026-04-12") },
-      { servico: "Fita de Crachá", planejado: { qtd: 600, dias: 1, unit: 3 }, orcado: { qtd: 600, dias: 1, unit: 2.8 }, contratado: { qtd: 600, dias: 1, unit: 2.8 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "miam", valorPago: 1680, dataPagamento: new Date("2026-04-12") },
+      { servico: "Kit Participante", planejado: { qtd: 600, dias: 1, unit: 45 }, orcado: { qtd: 600, dias: 1, unit: 42 }, contratado: { qtd: 600, dias: 1, unit: 42 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "miam", valorPago: 25200, dataPagamento: new Date("2025-04-12") },
+      { servico: "Crachá", planejado: { qtd: 600, dias: 1, unit: 4 }, orcado: { qtd: 600, dias: 1, unit: 4 }, contratado: { qtd: 600, dias: 1, unit: 4 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "miam", valorPago: 2400, dataPagamento: new Date("2025-04-12") },
+      { servico: "Fita de Crachá", planejado: { qtd: 600, dias: 1, unit: 3 }, orcado: { qtd: 600, dias: 1, unit: 2.8 }, contratado: { qtd: 600, dias: 1, unit: 2.8 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "miam", valorPago: 1680, dataPagamento: new Date("2025-04-12") },
       { servico: "Premiação", planejado: { qtd: 5, dias: 1, unit: 800 }, orcado: { qtd: 5, dias: 1, unit: 760 }, statusProdutor: "AGUARDANDO_APROVACAO" },
       { servico: "Frete Material", planejado: { qtd: 1, dias: 1, unit: 3500 }, orcado: { qtd: 1, dias: 1, unit: 3500 }, statusProdutor: "EM_COTACAO" },
     ],
@@ -258,8 +259,8 @@ const CATEGORIES: DemoCategory[] = [
     name: "DIVERSOS",
     order: 110,
     items: [
-      { servico: "Agência de Criação", planejado: { qtd: 1, dias: 1, unit: 25000 }, orcado: { qtd: 1, dias: 1, unit: 23000 }, contratado: { qtd: 1, dias: 1, unit: 23000 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "miam", valorPago: 23000, dataPagamento: new Date("2026-02-10") },
-      { servico: "Seguro Responsabilidade Civil", planejado: { qtd: 1, dias: 1, unit: 4800 }, orcado: { qtd: 1, dias: 1, unit: 4800 }, contratado: { qtd: 1, dias: 1, unit: 4800 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "seguralta", valorPago: 4800, dataPagamento: new Date("2026-04-01") },
+      { servico: "Agência de Criação", planejado: { qtd: 1, dias: 1, unit: 25000 }, orcado: { qtd: 1, dias: 1, unit: 23000 }, contratado: { qtd: 1, dias: 1, unit: 23000 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "miam", valorPago: 23000, dataPagamento: new Date("2025-02-10") },
+      { servico: "Seguro Responsabilidade Civil", planejado: { qtd: 1, dias: 1, unit: 4800 }, orcado: { qtd: 1, dias: 1, unit: 4800 }, contratado: { qtd: 1, dias: 1, unit: 4800 }, statusProdutor: "APROVADO", statusFinanceiro: "PAGO", supplier: "seguralta", valorPago: 4800, dataPagamento: new Date("2025-04-01") },
       { servico: "Material de Escritório", planejado: { qtd: 1, dias: 1, unit: 2500 }, orcado: { qtd: 1, dias: 1, unit: 2200 }, statusProdutor: "APROVADO", statusFinanceiro: "SOLICITADO" },
       { servico: "Cobertura Fotográfica", planejado: { qtd: 1, dias: 3, unit: 3500 }, orcado: { qtd: 1, dias: 3, unit: 3500 }, contratado: { qtd: 1, dias: 3, unit: 3500 }, statusProdutor: "APROVADO", statusFinanceiro: "AGUARDANDO_APROVACAO" },
       { servico: "Internet WiFi", planejado: { qtd: 1, dias: 3, unit: 4200 }, orcado: { qtd: 1, dias: 3, unit: 4200 }, contratado: { qtd: 1, dias: 3, unit: 4200 }, statusProdutor: "APROVADO", statusFinanceiro: "ENVIADO_LANCADO", supplier: "convencoes" },
