@@ -26,7 +26,7 @@ export default async function AppLayout({
             +
           </span>
         </div>
-        <Sidebar />
+        <Sidebar isAdmin={session?.user?.role === "ADMIN"} />
         {session?.user && (
           <UserMenu
             name={session.user.name}
