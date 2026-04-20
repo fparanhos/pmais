@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  FileSpreadsheet,
   LayoutDashboard,
   ListChecks,
   Receipt,
@@ -18,6 +19,7 @@ const items = [
 ];
 
 const adminItems = [
+  { href: "/admin/importar-planilha", label: "Importar planilha", icon: FileSpreadsheet },
   { href: "/admin/importar", label: "Importar Trello", icon: Upload },
 ];
 
