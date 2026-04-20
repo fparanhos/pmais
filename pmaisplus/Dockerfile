@@ -56,14 +56,12 @@ COPY --from=build --chown=nextjs:nodejs /app/public ./public
 # Prisma: schema + migrations + cliente gerado (sql + engines)
 COPY --from=build --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=build --chown=nextjs:nodejs /app/src/generated/prisma ./src/generated/prisma
-COPY --from=build --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
-# node_modules completo do prisma CLI não é copiado pelo standalone — trazemos só o mínimo:
-COPY --from=build --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=build --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=build --chown=nextjs:nodejs /app/node_modules/dotenv ./node_modules/dotenv
-COPY --from=build --chown=nextjs:nodejs /app/node_modules/tsx ./node_modules/tsx
-COPY --from=build --chown=nextjs:nodejs /app/node_modules/bcryptjs ./node_modules/bcryptjs
 COPY --from=build --chown=nextjs:nodejs /app/scripts ./scripts
+# node_modules completo do build — evita "module not found" em transitive
+# deps do prisma/@prisma/config (e.g. `effect`). Imagem fica maior (~400MB)
+# mas o entrypoint (prisma migrate deploy + tsx seed-admin) funciona sem
+# montar o quebra-cabeça de dependências à mão.
+COPY --from=build --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --chown=nextjs:nodejs docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
