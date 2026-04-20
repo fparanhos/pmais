@@ -158,7 +158,7 @@ export function EventPicker({
                       onClick={() => handleDelete(e)}
                       disabled={isDeleting || pending}
                       title={`Excluir "${e.name}"`}
-                      className="px-2 flex items-center opacity-0 group-hover:opacity-100 focus:opacity-100 text-sidebar-muted hover:text-destructive transition-opacity"
+                      className="px-3 flex items-center text-sidebar-muted hover:text-destructive hover:bg-destructive/10 transition-colors"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
