@@ -1,0 +1,16 @@
+# Shell scripts e arquivos Docker precisam usar LF — CRLF quebra o bash no
+# container (`/usr/bin/env: 'sh\r': No such file or directory`).
+*.sh                text eol=lf
+Dockerfile          text eol=lf
+docker/entrypoint.sh text eol=lf
+.dockerignore       text eol=lf
+
+# Código-fonte padrão — deixa o Git normalizar mas emite LF no checkout.
+*.ts                text
+*.tsx               text
+*.js                text
+*.jsx               text
+*.json              text
+*.md                text
+*.css               text
+*.prisma            text
