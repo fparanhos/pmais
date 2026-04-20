@@ -43,3 +43,10 @@ next-env.d.ts
 # raw source data (planilha xlsm, export Trello) — dados sensíveis, manter local
 /data/sources/
 
+# prisma generated client (regerado via prisma generate)
+/src/generated/prisma
+
+# sqlite database files — dados locais, nunca commitar
+/prisma/*.db
+/prisma/*.db-journal
+

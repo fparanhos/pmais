@@ -1,15 +1,19 @@
 import Image from "next/image";
+import { auth } from "@/lib/auth";
 import { Sidebar } from "@/components/sidebar";
+import { UserMenu } from "@/components/user-menu";
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
   return (
     <div className="flex flex-1 min-h-full">
-      <aside className="w-60 shrink-0 border-r border-border bg-card flex flex-col">
-        <div className="h-16 flex items-center px-5 border-b border-border">
+      <aside className="w-60 shrink-0 border-r border-sidebar-border bg-sidebar flex flex-col">
+        <div className="h-16 flex items-center px-5 border-b border-sidebar-border">
           <Image
             src="/brand/logo.png"
             alt="Pmais"
@@ -22,10 +26,13 @@ export default function AppLayout({
           </span>
         </div>
         <Sidebar />
-        <div className="mt-auto px-4 py-4 border-t border-border text-xs text-muted-foreground">
-          <div className="font-medium text-foreground">Pmais Eventos</div>
-          <div>v0.1 · em construção</div>
-        </div>
+        {session?.user && (
+          <UserMenu
+            name={session.user.name}
+            email={session.user.email}
+            role={session.user.role}
+          />
+        )}
       </aside>
       <main className="flex-1 min-w-0 flex flex-col">{children}</main>
     </div>
