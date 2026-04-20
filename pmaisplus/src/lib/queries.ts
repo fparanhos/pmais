@@ -1,5 +1,8 @@
 import "server-only";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+
+export const ACTIVE_EVENT_COOKIE = "pmais_active_event_id";
 
 export type StatusProdutor =
   | "APROVADO"
@@ -16,13 +19,36 @@ export type StatusFinanceiro =
 
 export type RevenueType = "INSCRICAO" | "PATROCINIO" | "OUTRAS";
 
-// The MVP works against a single demo event. When we add multi-event support
-// we'll thread an eventId through these queries.
+/**
+ * Retorna o evento ativo. Prioridade:
+ *   1. Cookie `pmais_active_event_id` (definido pelo EventPicker)
+ *   2. Fallback: evento mais recente do banco
+ *   3. null se não existe nenhum
+ */
 export async function getActiveEvent() {
-  const event = await prisma.event.findFirst({
+  const store = await cookies();
+  const selected = store.get(ACTIVE_EVENT_COOKIE)?.value;
+  if (selected) {
+    const ev = await prisma.event.findUnique({ where: { id: selected } });
+    if (ev) return ev;
+  }
+  return prisma.event.findFirst({ orderBy: { createdAt: "desc" } });
+}
+
+/**
+ * Lista resumida de eventos para o seletor.
+ */
+export async function listEvents() {
+  return prisma.event.findMany({
     orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      cliente: true,
+      startDate: true,
+      endDate: true,
+    },
   });
-  return event;
 }
 
 export async function getEventSummary(eventId: string) {

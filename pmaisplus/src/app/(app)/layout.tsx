@@ -2,13 +2,19 @@ import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { Sidebar } from "@/components/sidebar";
 import { UserMenu } from "@/components/user-menu";
+import { EventPicker } from "@/components/event-picker";
+import { getActiveEvent, listEvents } from "@/lib/queries";
 
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const [session, events, active] = await Promise.all([
+    auth(),
+    listEvents(),
+    getActiveEvent(),
+  ]);
 
   return (
     <div className="flex flex-1 h-full overflow-hidden">
@@ -26,6 +32,7 @@ export default async function AppLayout({
             +
           </span>
         </div>
+        <EventPicker events={events} activeId={active?.id ?? null} />
         <Sidebar isAdmin={session?.user?.role === "ADMIN"} />
         {session?.user && (
           <UserMenu
