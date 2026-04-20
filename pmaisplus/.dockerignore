@@ -1,0 +1,15 @@
+node_modules
+.next
+.next/cache
+out
+.git
+.gitignore
+*.log
+.env
+.env.local
+.DS_Store
+data/sources
+prisma/dev.db*
+.vscode
+.idea
+README.md

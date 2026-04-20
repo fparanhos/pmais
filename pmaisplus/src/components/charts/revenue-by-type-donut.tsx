@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { brl } from "@/lib/format";
 
@@ -22,6 +23,7 @@ const COLOR: Record<Row["type"], string> = {
 };
 
 export function RevenueByTypeDonut({ data }: { data: Row[] }) {
+  const router = useRouter();
   const pieData = data.map((d) => ({
     name: LABEL[d.type],
     value: d.realizado,
@@ -45,6 +47,11 @@ export function RevenueByTypeDonut({ data }: { data: Row[] }) {
             dataKey="value"
             stroke="var(--card)"
             strokeWidth={2}
+            style={{ cursor: "pointer" }}
+            onClick={(_, index) => {
+              const slice = pieData[index];
+              if (slice) router.push(`/receitas#type-${slice.type}`);
+            }}
           >
             {pieData.map((entry) => (
               <Cell key={entry.type} fill={COLOR[entry.type]} />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Bar,
   BarChart,
@@ -13,6 +14,7 @@ import {
 import { brlCompact, brl } from "@/lib/format";
 
 type Row = {
+  id: string;
   name: string;
   planejado: number;
   contratado: number;
@@ -20,10 +22,13 @@ type Row = {
 };
 
 export function ExpenseByCategoryBar({ data }: { data: Row[] }) {
-  const short = data.map((d) => ({
-    ...d,
-    label: shorten(d.name),
-  }));
+  const router = useRouter();
+  const short = data.map((d) => ({ ...d, label: shorten(d.name) }));
+
+  function jumpTo(id: string | null | undefined) {
+    if (!id) return;
+    router.push(`/despesas#cat-${id}`);
+  }
 
   return (
     <div className="h-96 w-full">
@@ -33,6 +38,12 @@ export function ExpenseByCategoryBar({ data }: { data: Row[] }) {
           layout="vertical"
           margin={{ top: 8, right: 24, bottom: 8, left: 24 }}
           barCategoryGap={8}
+          onClick={(state) => {
+            type ClickPayload = { activePayload?: { payload: Row }[] };
+            const p = (state as ClickPayload)?.activePayload?.[0]?.payload;
+            jumpTo(p?.id);
+          }}
+          style={{ cursor: "pointer" }}
         >
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
           <XAxis
@@ -76,6 +87,9 @@ export function ExpenseByCategoryBar({ data }: { data: Row[] }) {
           <Bar dataKey="pago" fill="var(--chart-1)" radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
+      <p className="text-[10px] text-muted-foreground text-center mt-1">
+        Clique numa categoria para abrir em Despesas
+      </p>
     </div>
   );
 }

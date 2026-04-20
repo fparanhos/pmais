@@ -95,7 +95,8 @@ export function DespesasList({
           return (
             <section
               key={cat.id}
-              className="relative rounded-xl border border-border bg-card overflow-hidden"
+              id={`cat-${cat.id}`}
+              className="relative rounded-xl border border-border bg-card overflow-hidden scroll-mt-24 target:ring-2 target:ring-primary/60 target:ring-offset-2 target:ring-offset-background"
             >
               <span
                 className="absolute left-0 top-0 bottom-0 w-1"

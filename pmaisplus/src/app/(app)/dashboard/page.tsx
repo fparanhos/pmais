@@ -112,6 +112,7 @@ export default async function DashboardPage() {
             <CardContent>
               <ExpenseByCategoryBar
                 data={byCategory.map((c) => ({
+                  id: c.id,
                   name: c.name,
                   planejado: c.planejado,
                   contratado: c.contratado,
