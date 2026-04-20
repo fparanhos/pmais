@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@source "../**/*.{ts,tsx,js,jsx,mdx}";
+
 @custom-variant dark (&:is(.dark *));
 
 /* Pmais+ palette — teal primário (#2FB5AD) + roxo acento (#4C0DB3)

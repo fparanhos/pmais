@@ -11,7 +11,7 @@ export default async function AppLayout({
   const session = await auth();
 
   return (
-    <div className="flex flex-1 min-h-full">
+    <div className="flex flex-1 h-full overflow-hidden">
       <aside className="w-60 shrink-0 border-r border-sidebar-border bg-sidebar flex flex-col">
         <div className="h-16 flex items-center px-5 border-b border-sidebar-border">
           <Image
@@ -34,7 +34,9 @@ export default async function AppLayout({
           />
         )}
       </aside>
-      <main className="flex-1 min-w-0 flex flex-col">{children}</main>
+      <main className="flex-1 min-w-0 flex flex-col overflow-y-auto">
+        {children}
+      </main>
     </div>
   );
 }
